@@ -1,56 +1,63 @@
-import matplotlib.pyplot as plt
+# 📌 Ambiente básico: Matemática para GPU / IA / CG
+# Apenas prints para entender as saídas
+
 import numpy as np
-from matplotlib.animation import FuncAnimation
 
-# Configurações do sinal
-fs = 100 # Frequência de amostragem (para a animação)
-t_max = 2 # Duração total da simulação em segundos
-t = np.arange(0, t_max, 1/fs)
-sinal_analogico = 2.5 * (1 + np.sin(2 * np.pi * 1 * t)) # Sinal mais lento para visualização
+print("=== VETORES ===")
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
 
-# Configurações do ADC (ex: 3 bits)
-bits_adc = 3
-niveis = 2**bits_adc
-degrau = 5.0 / (niveis - 1)
+print("a:", a)
+print("b:", b)
+print("soma:", a + b)
+print("subtração:", a - b)
 
-# Preparando o plot
-fig, ax = plt.subplots(figsize=(10, 5))
-ax.set_xlim(0, t_max)
-ax.set_ylim(0, 5.2)
-ax.set_title(f"Simulação Animada do ADC ({bits_adc} bits)")
-ax.set_xlabel("Tempo (s)")
-ax.set_ylabel("Tensão (V)")
-ax.grid(True, alpha=0.3)
+print("\n=== PRODUTO ESCALAR ===")
+dot = np.dot(a, b)
+print("a · b =", dot)
 
-line_analog, = ax.plot([], [], 'r--', label="Sinal Analógico", alpha=0.7)
-line_digital, = ax.step([], [], 'b-o', where='post', label="Sinal Digital (Quantizado)", markersize=4) # Adicionado 'o' para pontos
+print("\n=== PRODUTO VETORIAL ===")
+cross = np.cross(a, b)
+print("a x b =", cross)
 
-# Função de inicialização da animação
-def init():
-    line_analog.set_data([], [])
-    line_digital.set_data([], [])
-    return line_analog, line_digital,
+print("\n=== MATRIZ TRANSFORMAÇÃO 2D ===")
+point = np.array([2, 3, 1])
 
-# Função que será chamada a cada frame
-def animate(i):
-    # Lógica para o quadro atual
-    # Identação de 4 espaços
-    t_atual = t[:i+1]
-    sinal_analog_atual = sinal_analogico[:i+1]
-    
-    # Quantização do sinal
-    sinal_digital_atual = np.round(sinal_analog_atual / degrau) * degrau
-    
-    line_analog.set_data(t_atual, sinal_analog_atual)
-    line_digital.set_data(t_atual, sinal_digital_atual)
-    
-    return line_analog, line_digital,
+T = np.array([
+    [1, 0, 5],
+    [0, 1, 2],
+    [0, 0, 1]
+])
 
-# Criando a animação
-ani = FuncAnimation(fig, animate, init_func=init, frames=len(t), interval=50, blit=True)
+result = T @ point
+print("ponto original:", point)
+print("ponto transformado:", result)
 
-# Salvar a animação como GIF (você pode postar direto no LinkedIn)
-# ani.save('adc_animation.gif', writer='pillow', fps=20) 
+print("\n=== DISTÂNCIA EUCLIDIANA ===")
 
-plt.legend()
-plt.show()
+p1 = np.array([0, 0])
+p2 = np.array([3, 4])
+
+distance = np.linalg.norm(p2 - p1)
+print("p1:", p1)
+print("p2:", p2)
+print("distância:", distance)
+
+print("\n=== IA: CAMADA LINEAR (Wx + b) ===")
+
+x = np.array([1.0, 2.0])
+W = np.array([
+    [0.5, 0.2],
+    [0.1, 0.7]
+])
+b = np.array([0.1, 0.2])
+
+y = W @ x + b
+
+print("x:", x)
+print("W:\n", W)
+print("b:", b)
+print("y:", y)
+
+print("\n=== FINAL ===")
+print("Pipeline: Matemática → Código → IA / GPU / CG")
